@@ -20,7 +20,7 @@ public class UserValidator {
             log.error("Email не прошел валидацию.");
             isValidated = false;
         }
-        if (user.getLogin().contains(" ") || user.getLogin().isBlank()) {
+        if (user.getLogin() == null || user.getLogin().contains(" ") || user.getLogin().isBlank()) {
             log.error("Login не прошел валидацию.");
             isValidated = false;
         }

@@ -22,7 +22,7 @@ public class FilmValidator {
             log.error("Дата релиза фильма раньше 28 декабря 1895 года.");
             isValidated = false;
         }
-        if (film.getDuration() < 0) {
+        if (film.getDuration() < 0L) {
             log.error("Продожительность фильма меньше нуля.");
             isValidated = false;
         }
