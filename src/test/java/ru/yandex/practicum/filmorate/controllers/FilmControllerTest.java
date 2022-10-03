@@ -20,7 +20,6 @@ class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        FilmorateApplication.main(new String[0]);
         filmController = new FilmController();
         correctFilm = new Film("Название фильма", "Описание фильма",
                 LocalDate.of(2000, 10, 10), 100L);

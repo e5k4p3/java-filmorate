@@ -20,7 +20,6 @@ class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        FilmorateApplication.main(new String[0]);
         userController = new UserController();
         correctUser = new User("e5k4p3@gmail.com", "e5k4p3", "Mulenas", LocalDate.of(1995, 7, 11));
         userWithIncorrectEmail = new User("@gmail.com", "e5k4p3", "Mulenas", LocalDate.of(1995, 7, 11));
