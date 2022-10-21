@@ -8,7 +8,7 @@ import org.springframework.validation.ObjectError;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.interfaces.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.List;
 

@@ -32,10 +32,6 @@ public class Film {
         likes.remove(id);
     }
 
-    public Set<Integer> getLikes() {
-        return likes;
-    }
-
     public int getLikesAmount() {
         return likes.size();
     }
