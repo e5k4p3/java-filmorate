@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -45,24 +45,26 @@ public class UserService {
 
     public void addFriend(int userId, int friendId) {
         if (userStorage.getUserById(userId) == null) {
-            throw new UserNotFoundException("Пользователь с id " + userId + " не найден.");
+            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
         }
         if (userStorage.getUserById(friendId) == null) {
-            throw new UserNotFoundException("Пользователь с id " + userId + " не найден.");
+            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
         }
         userStorage.getUserById(userId).addFriend(friendId);
         userStorage.getUserById(friendId).addFriend(userId);
+        log.info("Пользователи с id " + userId + " и " + friendId + " стали друзьями.");
     }
 
     public void removeFriend(int userId, int friendId) {
         if (userStorage.getUserById(userId) == null) {
-            throw new UserNotFoundException("Пользователь с id " + userId + " не найден.");
+            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
         }
         if (userStorage.getUserById(friendId) == null) {
-            throw new UserNotFoundException("Пользователь с id " + userId + " не найден.");
+            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
         }
         userStorage.getUserById(userId).removeFriend(friendId);
         userStorage.getUserById(friendId).removeFriend(userId);
+        log.info("Пользователи с id " + userId + " и " + friendId + " больше не друзья.");
     }
 
     public List<User> getUserFriends(int userId) {

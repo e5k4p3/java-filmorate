@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -53,7 +53,7 @@ public class FilmService {
 
     public void removeLikeFromFilm(int filmId, int userId) {
         if (!filmStorage.getFilmById(filmId).getLikes().contains(userId)) {
-            throw new UserNotFoundException("У фильма с id " + filmId + " нету лайка от пользователя с id " + userId + ".");
+            throw new EntityNotFoundException("У фильма с id " + filmId + " нету лайка от пользователя с id " + userId + ".");
         }
         filmStorage.getFilmById(filmId).removeLike(userId);
         log.info("Пользователь с id " + userId + " убрал лайк у фильма с id " + filmId + ".");

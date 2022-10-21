@@ -59,21 +59,25 @@ class FilmControllerTest {
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(filmWithEmptyName)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
 
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(filmWithIncorrectDescription)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
 
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(filmWithIncorrectReleaseDate)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
 
         mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(filmWithIncorrectDuration)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
     }
 }

@@ -55,12 +55,14 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(userWithIncorrectEmail)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(userWithIncorrectLogin)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,6 +72,7 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(gson.toJson(userWithIncorrectBirthday)))
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+                .andExpect(status().is4xxClientError());
     }
 }

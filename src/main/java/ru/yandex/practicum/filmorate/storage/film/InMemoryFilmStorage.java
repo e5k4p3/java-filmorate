@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
@@ -25,7 +25,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void deleteFilm(int id) {
         if (!films.containsKey(id)) {
-            throw new FilmNotFoundException("Фильм с id " + id + " не найден.");
+            throw new EntityNotFoundException("Фильм с id " + id + " не найден.");
         }
         films.remove(id);
         log.info("Фильм с id " + id + " был удален.");
@@ -34,7 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         if (!films.containsKey(film.getId())) {
-            throw new FilmNotFoundException("Фильм с id " + film.getId() + " не найден.");
+            throw new EntityNotFoundException("Фильм с id " + film.getId() + " не найден.");
         }
         films.put(film.getId(), film);
         log.info("Фильм с id " + film.getId() + " был обновлен.");
@@ -44,7 +44,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film getFilmById(int id) {
         if (!films.containsKey(id)) {
-            throw new FilmNotFoundException("Фильм с id " + id + " не найден.");
+            throw new EntityNotFoundException("Фильм с id " + id + " не найден.");
         }
         return films.get(id);
     }
