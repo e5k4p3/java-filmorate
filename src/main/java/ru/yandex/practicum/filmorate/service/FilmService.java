@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.dao.FilmStorage;
+import ru.yandex.practicum.filmorate.dao.LikesStorage;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.List;
 
@@ -16,10 +16,12 @@ import java.util.List;
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
+    private final LikesStorage likesStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, LikesStorage likesStorage) {
         this.filmStorage = filmStorage;
+        this.likesStorage = likesStorage;
     }
 
     public Film addFilm(Film film) {
@@ -47,16 +49,11 @@ public class FilmService {
     }
 
     public void addLikeToFilm(int filmId, int userId) {
-        filmStorage.getFilmById(filmId).addLike(userId);
-        log.info("Пользователь с id " + userId + " добавил лайк фильму с id " + filmId + ".");
+        likesStorage.addLikeToFilm(filmId, userId);
     }
 
     public void removeLikeFromFilm(int filmId, int userId) {
-        if (!filmStorage.getFilmById(filmId).getLikes().contains(userId)) {
-            throw new EntityNotFoundException("У фильма с id " + filmId + " нету лайка от пользователя с id " + userId + ".");
-        }
-        filmStorage.getFilmById(filmId).removeLike(userId);
-        log.info("Пользователь с id " + userId + " убрал лайк у фильма с id " + filmId + ".");
+        likesStorage.removeLikeFromFilm(filmId, userId);
     }
 
     public void logValidationErrors(BindingResult bindingResult) {

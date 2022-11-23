@@ -5,22 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
+import ru.yandex.practicum.filmorate.dao.FriendsStorage;
+import ru.yandex.practicum.filmorate.dao.UserStorage;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class UserService {
     private final UserStorage userStorage;
+    private final FriendsStorage friendsStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendsStorage friendsStorage) {
         this.userStorage = userStorage;
+        this.friendsStorage = friendsStorage;
     }
 
     public User addUser(User user) {
@@ -44,40 +45,19 @@ public class UserService {
     }
 
     public void addFriend(int userId, int friendId) {
-        if (userStorage.getUserById(userId) == null) {
-            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
-        }
-        if (userStorage.getUserById(friendId) == null) {
-            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
-        }
-        userStorage.getUserById(userId).addFriend(friendId);
-        userStorage.getUserById(friendId).addFriend(userId);
-        log.info("Пользователи с id " + userId + " и " + friendId + " стали друзьями.");
+        friendsStorage.addToFriends(userId, friendId);
     }
 
     public void removeFriend(int userId, int friendId) {
-        if (userStorage.getUserById(userId) == null) {
-            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
-        }
-        if (userStorage.getUserById(friendId) == null) {
-            throw new EntityNotFoundException("Пользователь с id " + userId + " не найден.");
-        }
-        userStorage.getUserById(userId).removeFriend(friendId);
-        userStorage.getUserById(friendId).removeFriend(userId);
-        log.info("Пользователи с id " + userId + " и " + friendId + " больше не друзья.");
+        friendsStorage.removeFromFriends(userId, friendId);
     }
 
     public List<User> getUserFriends(int userId) {
-        return userStorage.getUserById(userId).getFriends().stream()
-                .map(userStorage::getUserById)
-                .collect(Collectors.toList());
+        return friendsStorage.getUserFriends(userId);
     }
 
-    public List<User> getCommonFriends(int userId, int friendId) {
-        return userStorage.getUserById(userId).getFriends().stream()
-                .filter(userStorage.getUserById(friendId).getFriends()::contains)
-                .map(userStorage::getUserById)
-                .collect(Collectors.toList());
+    public List<User> getCommonFriends(int userId, int otherId) {
+        return friendsStorage.getCommonFriends(userId, otherId);
     }
 
     public void logValidationErrors(BindingResult bindingResult) {
