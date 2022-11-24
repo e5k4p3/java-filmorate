@@ -2,13 +2,11 @@ package ru.yandex.practicum.filmorate.storages;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.JdbcH2Runner;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.dao.FriendsStorage;
 import ru.yandex.practicum.filmorate.dao.UserStorage;
-import ru.yandex.practicum.filmorate.dao.impl.FriendsDbStorage;
-import ru.yandex.practicum.filmorate.dao.impl.UserDbStorage;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -18,9 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ContextConfiguration(classes = {FriendsDbStorage.class,
-        UserDbStorage.class})
-public class FriendsStorageTest extends JdbcH2Runner {
+@SpringBootTest
+@AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class FriendsStorageTest {
 
     @Autowired
     private UserStorage userStorage;
@@ -29,7 +28,6 @@ public class FriendsStorageTest extends JdbcH2Runner {
     private FriendsStorage friendsStorage;
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:friends-data.sql"})
     public void addToFriends() {
         friendsStorage.addToFriends(1, 2);
         assertEquals(1, friendsStorage.getUserFriends(1).size());
@@ -37,7 +35,6 @@ public class FriendsStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:friends-data.sql"})
     public void removeFromFriends() {
         friendsStorage.addToFriends(1, 2);
         assertEquals(1, friendsStorage.getUserFriends(1).size());
@@ -47,7 +44,6 @@ public class FriendsStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:friends-data.sql"})
     public void getUserFriends() {
         friendsStorage.addToFriends(1, 2);
         friendsStorage.addToFriends(1, 3);
@@ -59,7 +55,6 @@ public class FriendsStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:friends-data.sql"})
     public void getCommonFriends() {
         friendsStorage.addToFriends(1, 2);
         friendsStorage.addToFriends(3, 2);

@@ -26,3 +26,8 @@ INSERT INTO MPA_DICTIONARY (RATING, RATING_DESCRIPTION) VALUES ('PG', 'Детя�
 INSERT INTO MPA_DICTIONARY (RATING, RATING_DESCRIPTION) VALUES ('PG-13', 'Детям до 13 лет просмотр не желателен');
 INSERT INTO MPA_DICTIONARY (RATING, RATING_DESCRIPTION) VALUES ('R', 'Лицам до 17 лет просматривать фильм можно только в присутствии взрослого');
 INSERT INTO MPA_DICTIONARY (RATING, RATING_DESCRIPTION) VALUES ('NC-17', 'Лицам до 18 лет просмотр запрещён');
+INSERT INTO USERS_MODEL(email, login, name, birthday) VALUES ('e5k4p3@gmail.com', 'e5k4p3', 'e5k4p3', DATE '1995-07-11');
+INSERT INTO USERS_MODEL(email, login, name, birthday) VALUES ('mulenas@gmail.com', 'Mulenas', 'Mulenas', DATE '1995-07-11');
+INSERT INTO USERS_MODEL(email, login, name, birthday) VALUES ('thius@gmail.com', 'thius', 'thius', DATE '1995-07-11');
+INSERT INTO USERS_MODEL(email, login, name, birthday) VALUES ('kape@gmail.com', 'Kape', 'Kape', DATE '1995-07-11');
+INSERT INTO USERS_MODEL(email, login, name, birthday) VALUES ('reisen@gmail.com', 'Reisen', 'Reisen', DATE '1995-07-11');

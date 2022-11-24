@@ -2,13 +2,12 @@ package ru.yandex.practicum.filmorate.storages;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.JdbcH2Runner;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.dao.UserStorage;
-import ru.yandex.practicum.filmorate.dao.impl.UserDbStorage;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityAlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -18,8 +17,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = UserDbStorage.class)
-public class UserStorageTest extends JdbcH2Runner {
+@SpringBootTest
+@AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class UserStorageTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -28,7 +29,6 @@ public class UserStorageTest extends JdbcH2Runner {
     private UserStorage userStorage;
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void addUser() {
         User correctUser = new User("new@gmail.com", "User", "User",
                 LocalDate.of(1995, 7, 11));
@@ -47,7 +47,6 @@ public class UserStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void deleteUser() {
         userStorage.deleteUser(1);
         String sqlQuery = "SELECT * FROM users_model WHERE user_id = 1";
@@ -57,7 +56,6 @@ public class UserStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void updateUser() {
         User newUser = new User("newuser@gmail.com", "NewUser", "NewUser",
                 LocalDate.of(2000, 8, 20));
@@ -76,7 +74,6 @@ public class UserStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void getUserById() {
         User user = userStorage.getUserById(1);
         assertEquals(1, user.getId());
@@ -84,7 +81,6 @@ public class UserStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void getAllUsers() {
         List<User> allUsers = userStorage.getAllUsers();
         assertEquals(5, allUsers.size());

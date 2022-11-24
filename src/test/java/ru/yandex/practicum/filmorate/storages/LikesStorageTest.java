@@ -3,17 +3,14 @@ package ru.yandex.practicum.filmorate.storages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.JdbcH2Runner;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.dao.FilmStorage;
 import ru.yandex.practicum.filmorate.dao.LikesStorage;
 import ru.yandex.practicum.filmorate.dao.MpaStorage;
-import ru.yandex.practicum.filmorate.dao.impl.FilmDbStorage;
-import ru.yandex.practicum.filmorate.dao.impl.LikesDbStorage;
-import ru.yandex.practicum.filmorate.dao.impl.MpaDbStorage;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -23,10 +20,10 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ContextConfiguration(classes = {LikesDbStorage.class,
-        FilmDbStorage.class,
-        MpaDbStorage.class})
-public class LikesStorageTest extends JdbcH2Runner {
+@SpringBootTest
+@AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class LikesStorageTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -51,7 +48,6 @@ public class LikesStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void addLikeToFilm() {
         int id = filmStorage.addFilm(film).getId();
         likesStorage.addLikeToFilm(id, 1);
@@ -64,7 +60,6 @@ public class LikesStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:users-data.sql"})
     public void removeLikeFromFilm() {
         int id = filmStorage.addFilm(film).getId();
         likesStorage.addLikeToFilm(id, 1);

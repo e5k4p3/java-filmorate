@@ -3,18 +3,16 @@ package ru.yandex.practicum.filmorate.storages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import ru.yandex.practicum.filmorate.JdbcH2Runner;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.dao.*;
-import ru.yandex.practicum.filmorate.dao.impl.*;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -24,12 +22,10 @@ import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = {FilmDbStorage.class,
-        GenreDbStorage.class,
-        MpaDbStorage.class,
-        UserDbStorage.class,
-        LikesDbStorage.class})
-public class FilmStorageTest extends JdbcH2Runner {
+@SpringBootTest
+@AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class FilmStorageTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -66,7 +62,6 @@ public class FilmStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:films-data.sql"})
     public void addFilm() {
         Set<Genre> allGenres = new TreeSet<>(Comparator.comparing(Genre::getId));
         allGenres.add(genreComedy);
@@ -87,7 +82,6 @@ public class FilmStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:films-data.sql"})
     public void deleteFilm() {
         int id = filmStorage.addFilm(film).getId();
         filmStorage.deleteFilm(id);
@@ -98,7 +92,6 @@ public class FilmStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:films-data.sql"})
     public void updateFilm() {
         Film newFilm = new Film("Новое название", "Новое описание",
                 LocalDate.of(2005, 12, 12), 60L, pgMpa);
@@ -122,7 +115,6 @@ public class FilmStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:films-data.sql"})
     public void getFilmById() {
         filmStorage.addFilm(film);
         Film film = filmStorage.getFilmById(1);
@@ -131,7 +123,6 @@ public class FilmStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:films-data.sql"})
     public void getAllFilms() {
         filmStorage.addFilm(film);
         filmStorage.addFilm(film);
@@ -140,12 +131,7 @@ public class FilmStorageTest extends JdbcH2Runner {
     }
 
     @Test
-    @Sql({"classpath:schema.sql", "classpath:films-data.sql"})
     public void getMostLikedFilms() {
-        User firstUser = userStorage.addUser(new User("e5k4p3@gmail.com", "e5k4p3", "e5k4p3",
-                LocalDate.of(1995, 7, 11)));
-        User secondUser = userStorage.addUser(new User("mulenas@gmail.com", "Mulenas", "Mulenas",
-                LocalDate.of(1995, 7, 11)));
         Film secondFilm = new Film("Второй", "Описание второго",
                 LocalDate.of(1999, 8, 15), 50L, gMpa);
         Film thirdFilm = new Film("Третий", "Описание третьего",
@@ -153,9 +139,9 @@ public class FilmStorageTest extends JdbcH2Runner {
         filmStorage.addFilm(film);
         int secondFilmId = filmStorage.addFilm(secondFilm).getId();
         int thirdFilmId = filmStorage.addFilm(thirdFilm).getId();
-        likesStorage.addLikeToFilm(thirdFilmId, firstUser.getId());
-        likesStorage.addLikeToFilm(thirdFilmId, secondUser.getId());
-        likesStorage.addLikeToFilm(secondFilmId, firstUser.getId());
+        likesStorage.addLikeToFilm(thirdFilmId, 1);
+        likesStorage.addLikeToFilm(thirdFilmId, 2);
+        likesStorage.addLikeToFilm(secondFilmId, 1);
         List<Film> topFilms = filmStorage.getMostLikedFilms(10);
         System.out.println(topFilms.size());
         System.out.println(topFilms);
