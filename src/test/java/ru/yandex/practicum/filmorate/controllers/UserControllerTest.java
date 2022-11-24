@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 @AutoConfigureMockMvc
 class UserControllerTest {
 
@@ -41,7 +43,7 @@ class UserControllerTest {
         correctUser = new User("e5k4p3@gmail.com", "e5k4p3", "Mulenas", LocalDate.of(1995, 7, 11));
         userWithIncorrectEmail = new User("@gmail.com", "e5k4p3", "Mulenas", LocalDate.of(1995, 7, 11));
         userWithIncorrectLogin = new User("e5k4p3@gmail.com", "e5 k4 p3", "Mulenas", LocalDate.of(1995, 7, 11));
-        userWithEmptyName = new User("e5k4p3@gmail.com", "e5k4p3", "", LocalDate.of(1995, 7, 11));
+        userWithEmptyName = new User("mulenas@gmail.com", "Mulenas", "", LocalDate.of(1995, 7, 11));
         userWithIncorrectBirthday = new User("e5k4p3@gmail.com", "e5k4p3", "Mulenas", LocalDate.of(2995, 7, 11));
     }
 

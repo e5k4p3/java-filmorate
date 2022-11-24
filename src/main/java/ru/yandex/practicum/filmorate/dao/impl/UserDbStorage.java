@@ -65,6 +65,7 @@ public class UserDbStorage implements UserStorage {
     public User updateUser(User user) {
         if (getSqlRowSetByUserId(user.getId()).next()) {
             String sqlQuery = "UPDATE users_model SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
+            checkUserName(user);
             jdbcTemplate.update(sqlQuery,
                     user.getEmail(),
                     user.getLogin(),
@@ -82,7 +83,7 @@ public class UserDbStorage implements UserStorage {
     public User getUserById(int id) {
         SqlRowSet userRow = getSqlRowSetByUserId(id);
         if (userRow.next()) {
-            return getUserWithId(userRow);
+            return getUserFromRow(userRow);
         } else {
             throw new EntityNotFoundException("Пользователь с id " + id + " не найден.");
         }
@@ -94,7 +95,7 @@ public class UserDbStorage implements UserStorage {
         String sqlQuery = "SELECT * FROM users_model";
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlQuery);
         while (userRows.next()) {
-            allUsers.add(getUserWithId(userRows));
+            allUsers.add(getUserFromRow(userRows));
         }
         return allUsers;
     }
@@ -110,7 +111,7 @@ public class UserDbStorage implements UserStorage {
         return jdbcTemplate.queryForRowSet(sqlQuery, id);
     }
 
-    private User getUserWithId(SqlRowSet userRow) {
+    private User getUserFromRow(SqlRowSet userRow) {
         User user = new User(userRow.getString("email"),
                 userRow.getString("login"),
                 userRow.getString("name"),

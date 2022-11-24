@@ -26,6 +26,7 @@ public class FilmDbStorage implements FilmStorage {
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public Film addFilm(Film film) {
         String sqlQuery = "INSERT INTO films_model(title, description, release_date, duration, mpa_id) " +
@@ -84,7 +85,7 @@ public class FilmDbStorage implements FilmStorage {
     public Film getFilmById(int id) {
         SqlRowSet filmRow = getSqlRowSetByFilmId(id);
         if (filmRow.next()) {
-            return getFilmWithId(filmRow);
+            return getFilmFromRow(filmRow);
         } else {
             throw new EntityNotFoundException("Фильм с id " + id + " не найден.");
         }
@@ -96,18 +97,19 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "SELECT * FROM films_model";
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlQuery);
         while (filmRows.next()) {
-            allFilms.add(getFilmWithId(filmRows));
+            allFilms.add(getFilmFromRow(filmRows));
         }
         return allFilms;
     }
 
     public List<Film> getMostLikedFilms(int limit) {
         List<Film> topFilms = new ArrayList<>();
-        String sqlQuery = "SELECT * FROM films_model LEFT JOIN films_likes fl ON films_model.film_id = fl.film_id " +
-                "GROUP BY TITLE ORDER BY COUNT(fl.FILM_ID) DESC LIMIT ?";
+        String sqlQuery = "SELECT fm.*, COUNT(fl.like_id) FROM films_model AS fm " +
+                "LEFT OUTER JOIN films_likes AS fl on fm.film_id = fl.film_id " +
+                "GROUP BY fm.film_id ORDER BY COUNT(fl.like_id) DESC LIMIT ?";
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet(sqlQuery, limit);
         while (filmRows.next()) {
-            topFilms.add(getFilmWithId(filmRows));
+            topFilms.add(getFilmFromRow(filmRows));
         }
         return topFilms;
     }
@@ -117,7 +119,7 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.queryForRowSet(sqlQuery, id);
     }
 
-    private Film getFilmWithId(SqlRowSet filmRow) {
+    private Film getFilmFromRow(SqlRowSet filmRow) {
         Film film = new Film(filmRow.getString("title"),
                 filmRow.getString("description"),
                 filmRow.getDate("release_date").toLocalDate(),

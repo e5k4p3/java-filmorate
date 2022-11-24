@@ -19,6 +19,7 @@ public class MpaDbStorage implements MpaStorage {
     public MpaDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public Mpa getMpaById(int id) {
         String sqlQuery = "SELECT * FROM mpa_dictionary WHERE mpa_id = ?";

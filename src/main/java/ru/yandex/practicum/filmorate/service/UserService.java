@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -12,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
-@Slf4j
 @Service
 public class UserService {
     private final UserStorage userStorage;
@@ -63,8 +61,7 @@ public class UserService {
     public void logValidationErrors(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError error : bindingResult.getAllErrors()) {
-                log.warn(error.getDefaultMessage());
-                throw new ValidationException("User не прошел валидацию.");
+                throw new ValidationException(error.getDefaultMessage());
             }
         }
     }

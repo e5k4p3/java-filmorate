@@ -43,7 +43,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     private Genre getGenreFromRow(SqlRowSet genreRow) {
-        return new Genre (genreRow.getInt("genre_id"),
+        return new Genre(genreRow.getInt("genre_id"),
                 genreRow.getString("genre_name"),
                 genreRow.getString("genre_description"));
     }
