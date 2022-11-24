@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storages;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -27,6 +28,16 @@ public class UserStorageTest {
 
     @Autowired
     private UserStorage userStorage;
+
+    @BeforeEach
+    public void beforeEach() {
+        String firstSqlQuery = "INSERT INTO USERS_MODEL(email, login, name, birthday) " +
+                "VALUES ('e5k4p3@gmail.com', 'e5k4p3', 'e5k4p3', DATE '1995-07-11')";
+        String secondSqlQuery = "INSERT INTO USERS_MODEL(email, login, name, birthday) " +
+                "VALUES ('mulenas@gmail.com', 'Mulenas', 'Mulenas', DATE '1995-07-11')";
+        jdbcTemplate.update(firstSqlQuery);
+        jdbcTemplate.update(secondSqlQuery);
+    }
 
     @Test
     public void addUser() {
@@ -83,7 +94,7 @@ public class UserStorageTest {
     @Test
     public void getAllUsers() {
         List<User> allUsers = userStorage.getAllUsers();
-        assertEquals(5, allUsers.size());
+        assertEquals(2, allUsers.size());
     }
 
     private User getUserFromRow(SqlRowSet userRow) {

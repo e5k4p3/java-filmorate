@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.EntityNotFoundE
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -132,6 +133,10 @@ public class FilmStorageTest {
 
     @Test
     public void getMostLikedFilms() {
+        User firstUser = userStorage.addUser(new User("e5k4p3@gmail.com", "e5k4p3", "e5k4p3",
+                LocalDate.of(1995, 7, 11)));
+        User secondUser = userStorage.addUser(new User("mulenas@gmail.com", "Mulenas", "Mulenas",
+                LocalDate.of(1995, 7, 11)));
         Film secondFilm = new Film("Второй", "Описание второго",
                 LocalDate.of(1999, 8, 15), 50L, gMpa);
         Film thirdFilm = new Film("Третий", "Описание третьего",
@@ -139,9 +144,9 @@ public class FilmStorageTest {
         filmStorage.addFilm(film);
         int secondFilmId = filmStorage.addFilm(secondFilm).getId();
         int thirdFilmId = filmStorage.addFilm(thirdFilm).getId();
-        likesStorage.addLikeToFilm(thirdFilmId, 1);
-        likesStorage.addLikeToFilm(thirdFilmId, 2);
-        likesStorage.addLikeToFilm(secondFilmId, 1);
+        likesStorage.addLikeToFilm(thirdFilmId, firstUser.getId());
+        likesStorage.addLikeToFilm(thirdFilmId, secondUser.getId());
+        likesStorage.addLikeToFilm(secondFilmId, firstUser.getId());
         List<Film> topFilms = filmStorage.getMostLikedFilms(10);
         System.out.println(topFilms.size());
         System.out.println(topFilms);

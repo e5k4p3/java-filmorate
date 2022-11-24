@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.storages;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.dao.FriendsStorage;
 import ru.yandex.practicum.filmorate.dao.UserStorage;
@@ -22,10 +24,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FriendsStorageTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private UserStorage userStorage;
 
     @Autowired
     private FriendsStorage friendsStorage;
+
+    @BeforeEach
+    public void beforeEach() {
+        String firstSqlQuery = "INSERT INTO USERS_MODEL(email, login, name, birthday) " +
+                "VALUES ('e5k4p3@gmail.com', 'e5k4p3', 'e5k4p3', DATE '1995-07-11')";
+        String secondSqlQuery = "INSERT INTO USERS_MODEL(email, login, name, birthday) " +
+                "VALUES ('mulenas@gmail.com', 'Mulenas', 'Mulenas', DATE '1995-07-11')";
+        String thirdSqlQuery = "INSERT INTO USERS_MODEL(email, login, name, birthday) " +
+                "VALUES ('thius@gmail.com', 'thius', 'thius', DATE '1995-07-11')";
+        jdbcTemplate.update(firstSqlQuery);
+        jdbcTemplate.update(secondSqlQuery);
+        jdbcTemplate.update(thirdSqlQuery);
+    }
 
     @Test
     public void addToFriends() {

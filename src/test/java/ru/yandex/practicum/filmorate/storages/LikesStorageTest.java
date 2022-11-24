@@ -45,6 +45,9 @@ public class LikesStorageTest {
         gMpa = mpaStorage.getMpaById(1);
         film = new Film("Название", "Описание",
                 LocalDate.of(2000, 1, 1), 30L, gMpa);
+        String sqlQuery = "INSERT INTO USERS_MODEL(email, login, name, birthday) " +
+                "VALUES ('e5k4p3@gmail.com', 'e5k4p3', 'e5k4p3', DATE '1995-07-11')";
+        jdbcTemplate.update(sqlQuery);
     }
 
     @Test
