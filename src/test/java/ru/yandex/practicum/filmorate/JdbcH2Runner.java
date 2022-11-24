@@ -7,6 +7,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @JdbcTest
 @ExtendWith(SpringExtension.class)
-@PropertySource("classpath:")
+@PropertySource("classpath:application-test.properties")
 public abstract class JdbcH2Runner {
 }
