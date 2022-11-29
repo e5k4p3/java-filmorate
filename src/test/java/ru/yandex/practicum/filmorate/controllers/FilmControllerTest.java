@@ -5,12 +5,14 @@ import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.exceptionhandler.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@AutoConfigureTestDatabase
 @AutoConfigureMockMvc
 class FilmControllerTest {
     private final MockMvc mockMvc;
@@ -38,15 +41,15 @@ class FilmControllerTest {
     public void beforeEach() {
         gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
         correctFilm = new Film("Название фильма", "Описание фильма",
-                LocalDate.of(2000, 10, 10), 100L);
+                LocalDate.of(2000, 10, 10), 100L, new Mpa(1, null, null));
         filmWithEmptyName = new Film("", "Описание фильма",
-                LocalDate.of(2000, 10, 10), 100L);
+                LocalDate.of(2000, 10, 10), 100L, new Mpa(1, null, null));
         filmWithIncorrectDescription = new Film("Название фильма", String.copyValueOf(new char[201]),
-                LocalDate.of(2000, 10, 10), 100L);
+                LocalDate.of(2000, 10, 10), 100L, new Mpa(1, null, null));
         filmWithIncorrectReleaseDate = new Film("Название фильма", "Описание фильма",
-                LocalDate.of(1800, 10, 10), 100L);
+                LocalDate.of(1800, 10, 10), 100L, new Mpa(1, null, null));
         filmWithIncorrectDuration = new Film("Название фильма", "Описание фильма",
-                LocalDate.of(2000, 10, 10), -100L);
+                LocalDate.of(2000, 10, 10), -100L, new Mpa(1, null, null));
     }
 
     @Test
